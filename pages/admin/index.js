@@ -11,19 +11,19 @@ const dataPie = [
 ];
 
 const dataLine = [
-  { month: 'Jan', Ventas: 2400 },
-  { month: 'Feb', Ventas: 1398 },
-  { month: 'Mar', Ventas: 9800 },
-  { month: 'Apr', Ventas: 3908 },
-  { month: 'May', Ventas: 4800 },
-  { month: 'Jun', Ventas: 3800 },
-  { month: 'Jul', Ventas: 4300 },
+  { month: 'ENE', Ventas: 2400 },
+  { month: 'FEB', Ventas: 1398 },
+  { month: 'MAR', Ventas: 9800 },
+  { month: 'ABR', Ventas: 3908 },
+  { month: 'MAY', Ventas: 4800 },
+  { month: 'JUN', Ventas: 3800 },
+  { month: 'JUL', Ventas: 4300 },
 ];
 
 const dataBar = [
-  { name: 'Pan', inventory: 400 },
-  { name: 'Café y Bebidas', inventory: 300 },
-  { name: 'Pasteles', inventory: 300 },
+  { name: 'Pan', inventario: 400 },
+  { name: 'Café y Bebidas', inventario: 300 },
+  { name: 'Pasteles', inventario: 300 },
 ];
 
 const currentSales = 1944174;
@@ -82,10 +82,10 @@ function Dashboard() {
           </Paper>
         </Grid>
 
-        {/* Inventory Status */}
+        {/* inventario Status */}
         <Grid item xs={12} sm={6}>
           <Paper style={{ padding: 20, textAlign: 'center' }}>
-            <Typography variant="h6" gutterBottom>Inventory</Typography>
+            <Typography variant="h6" gutterBottom>Inventario</Typography>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={dataBar}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -93,7 +93,7 @@ function Dashboard() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="inventory" fill="#F7528A" />
+                <Bar dataKey="inventario" fill="#F7528A" />
               </BarChart>
             </ResponsiveContainer>
           </Paper>
