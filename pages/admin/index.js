@@ -31,10 +31,14 @@ const targetSales = 1990000;
 
 function Dashboard() {
   const [salesProgress, setSalesProgress] = useState(0);
+  const [formattedCurrentSales, setFormattedCurrentSales] = useState('');
+  const [formattedTargetSales, setFormattedTargetSales] = useState('');
 
   useEffect(() => {
     const calculatedProgress = (currentSales / targetSales) * 100;
     setSalesProgress(calculatedProgress);
+    setFormattedCurrentSales(currentSales.toLocaleString());
+    setFormattedTargetSales(targetSales.toLocaleString());
   }, []);
 
   return (
@@ -46,9 +50,9 @@ function Dashboard() {
       <Grid item xs={12}>
         <Paper style={{ padding: 20, backgroundColor: "transparent" }}>
           <Typography variant="h6" gutterBottom>Total Ventas</Typography>
-          <Typography variant="h5">${currentSales.toLocaleString()}</Typography>
+          <Typography variant="h5">${formattedCurrentSales}</Typography>
           <Typography variant="body1" color="textSecondary">
-            Total: ${targetSales.toLocaleString()}
+            Total: ${formattedTargetSales}
           </Typography>
           <LinearProgress variant="determinate" value={salesProgress} />
           <Typography variant="body2" color="textSecondary">

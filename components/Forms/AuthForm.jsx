@@ -36,7 +36,7 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
     if (creatingAccount) {
-      const userExists = users.some(user => user.email === email);
+      const userExists = users.some((user) => user.email === email);
       if (userExists) {
         setErrorMessage("An account with this email already exists.");
         return;
@@ -47,9 +47,17 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
       console.log("Account created successfully!");
       onClose();
     } else {
-      const user = users.find(user => user.email === email && user.password === password);
+      const user = users.find(
+        (user) => user.email === email && user.password === password
+      );
       if (user) {
-        localStorage.setItem("userSession", JSON.stringify({ id: user.id, name: `${user.firstName} ${user.lastName}` }));
+        localStorage.setItem(
+          "userSession",
+          JSON.stringify({
+            id: user.id,
+            name: `${user.firstName} ${user.lastName}`,
+          })
+        );
         console.log("Logged in successfully!");
         setLoginModalOpen(false);
       } else {
@@ -61,8 +69,9 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
   const modalStyle = {
     position: "absolute",
     width: 400,
-    backgroundColor: "white",
-    border: "2px solid #000",
+    backgroundColor: "#fcfcca",
+    // border: "2px solid #000",
+    borderRadius: "8px",
     boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
     padding: "20px",
     top: "50%",
@@ -79,7 +88,7 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
     >
       <div style={modalStyle}>
         <Typography variant="h6" component="h2" id="login-modal-title">
-          {creatingAccount ? "Create Account" : "Login"}
+          {creatingAccount ? "Crear cuenta" : "Iniciar sesión"}
         </Typography>
         {errorMessage && <Typography color="error">{errorMessage}</Typography>}
         <form onSubmit={handleSubmit}>
@@ -87,20 +96,22 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
             <>
               <TextField
                 id="first-name"
-                label="First Name"
+                label="Nombre"
                 variant="outlined"
                 fullWidth
                 value={firstName}
                 onChange={handleFirstNameChange}
+                sx={{ marginTop: 2 }}
                 required
               />
               <TextField
                 id="last-name"
-                label="Last Name"
+                label="Apellido"
                 variant="outlined"
                 fullWidth
                 value={lastName}
                 onChange={handleLastNameChange}
+                sx={{ marginTop: 2 }}
                 required
               />
             </>
@@ -112,31 +123,36 @@ const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
             fullWidth
             value={email}
             onChange={handleEmailChange}
+            sx={{ marginTop: 2 }}
             required
           />
           <TextField
             id="password"
-            label="Password"
+            label="Contraseña"
             type="password"
             variant="outlined"
             fullWidth
             value={password}
             onChange={handlePasswordChange}
+            sx={{ marginTop: 2 }}
             required
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ marginTop: 2 }}
+            sx={{ backgroundColor: '#29a636', color: 'white', '&:hover': { backgroundColor: '#29a636' }, marginTop: 2}}
+            fullWidth
           >
-            {creatingAccount ? "Create Account" : "Login"}
+            {creatingAccount ? "Registrarse" : "Iniciar sesión"}
           </Button>
         </form>
         <Typography variant="body2" sx={{ mt: 2 }}>
-          {creatingAccount ? "Already have an account?" : "Don't have an account?"}
+          {creatingAccount
+            ? "¿Ya tienes una cuenta?"
+            : "¿Aún no tienes cuenta?"}
           <Button onClick={() => setCreatingAccount(!creatingAccount)}>
-            {creatingAccount ? "Login" : "Create Account"}
+            {creatingAccount ? "Inicia sesión" : "Crea una cuenta"}
           </Button>
         </Typography>
       </div>

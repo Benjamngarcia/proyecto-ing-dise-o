@@ -27,9 +27,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Box sx={{ p: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Ver todas nuestras opciones de panes
-        </Typography>
         <Grid container spacing={2} sx={{ overflowX: 'auto', padding: 1 }}>
           {allBreadsState.map((event) => (
             <Grid item key={event.id} xs={12} sm={6} md={4} lg={3}>
