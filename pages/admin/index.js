@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Paper, Grid, LinearProgress } from '@mui/material';
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts';
+import { PieChart, Pie, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts';
 
 // Random data for the charts
 const dataPie = [
@@ -30,36 +30,50 @@ const currentSales = 1944174;
 const targetSales = 1990000;
 
 function Dashboard() {
+  const [salesProgress, setSalesProgress] = useState(0);
 
-    const salesProgress=(currentSales/targetSales)*100;
+  useEffect(() => {
+    const calculatedProgress = (currentSales / targetSales) * 100;
+    setSalesProgress(calculatedProgress);
+  }, []);
 
   return (
     <div style={{ padding: 20 }}>
-      <Typography variant="h2"  align="center" style={{ color: 'blue' }}   gutterBottom>Bienvenido Administrador</Typography>
-      
+      <Typography variant="h2" align="center" style={{ color: 'blue' }} gutterBottom>
+        Bienvenido Administrador
+      </Typography>
+
       <Grid item xs={12}>
-          <Paper style={{ padding: 20 }}>
-            <Typography variant="h6" gutterBottom>Total Ventas</Typography>
-            <Typography variant="h5">${currentSales.toLocaleString()}</Typography>
-            <Typography variant="body1" color="textSecondary">
-              Total: ${targetSales.toLocaleString()}
-            </Typography>
-            <LinearProgress variant="determinate" value={salesProgress} />
-            <Typography variant="body2" color="textSecondary">
-              {Math.round(salesProgress)}% de Meta Mensual
-            </Typography>
-          </Paper>
-        </Grid>
-      
+        <Paper style={{ padding: 20, backgroundColor: "transparent" }}>
+          <Typography variant="h6" gutterBottom>Total Ventas</Typography>
+          <Typography variant="h5">${currentSales.toLocaleString()}</Typography>
+          <Typography variant="body1" color="textSecondary">
+            Total: ${targetSales.toLocaleString()}
+          </Typography>
+          <LinearProgress variant="determinate" value={salesProgress} />
+          <Typography variant="body2" color="textSecondary">
+            {Math.round(salesProgress)}% de Meta Mensual
+          </Typography>
+        </Paper>
+      </Grid>
 
       <Grid container spacing={5}>
         {/* Goal Section */}
         <Grid item xs={12} sm={30}>
-          <Paper style={{ padding: 30, textAlign: 'center' }}>
+          <Paper style={{ padding: 30, textAlign: 'center', backgroundColor: "transparent" }}>
             <Typography variant="h6" gutterBottom>Ventas</Typography>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie dataKey="value" isAnimationActive={false} data={dataPie} cx="50%" cy="50%" outerRadius={150} fill="#52E1F7" label />
+                <Pie
+                  dataKey="value"
+                  isAnimationActive={false}
+                  data={dataPie}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={150}
+                  fill="#52E1F7"
+                  label
+                />
               </PieChart>
             </ResponsiveContainer>
           </Paper>
@@ -67,7 +81,7 @@ function Dashboard() {
 
         {/* Sales by Month */}
         <Grid item xs={12} sm={6}>
-          <Paper style={{ padding: 20, textAlign: 'center' }}>
+          <Paper style={{ padding: 20, textAlign: 'center', backgroundColor: "transparent" }}>
             <Typography variant="h6" gutterBottom>Ventas por mes</Typography>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={dataLine}>
@@ -82,9 +96,9 @@ function Dashboard() {
           </Paper>
         </Grid>
 
-        {/* inventario Status */}
+        {/* Inventario Status */}
         <Grid item xs={12} sm={6}>
-          <Paper style={{ padding: 20, textAlign: 'center' }}>
+          <Paper style={{ padding: 20, textAlign: 'center', backgroundColor: "transparent" }}>
             <Typography variant="h6" gutterBottom>Inventario</Typography>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={dataBar}>

@@ -14,10 +14,10 @@ import {
   MenuItem,
   Button,
   CardMedia,
+  Toolbar,
 } from "@mui/material";
-import { Person, ShoppingCart } from "@mui/icons-material";
+import { Person, ShoppingCart, Menu as MenuIcon } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import Close from "@mui/icons-material/Close";
 import Link from "next/link";
 import LoginModal from "../Forms/AuthForm";
@@ -71,7 +71,6 @@ export function Nav() {
   const [cartItems, setCartItems] = useState([]);
   const [session, setSession] = useState(null);
   const router = useRouter();
-  const navItems = [{ title: "Home", link: "/" }];
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");
@@ -124,47 +123,35 @@ export function Nav() {
           padding: "8px 4px",
         }}
       >
-        <Link
-          href="/"
-          className="links-styles"
-          alt="Link to return to the home page"
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Typography color="primary" sx={{ fontWeight: "bold" }}>
-              Panadería Montpellier
-            </Typography>
-          </Box>
-        </Link>
+        <Typography color="primary" sx={{ fontWeight: "bold" }}>
+          Panadería Montpellier
+        </Typography>
         <IconButton onClick={handleDrawerToggle}>
           <Close />
         </IconButton>
       </Box>
       <Divider />
       <List>
-        {navItems.map((item) => (
-          <ListItem
-            key={item.title}
-            sx={{
-              borderRadius: "8px",
-              transition: ".3s",
-              "&:hover": { backgroundColor: "#EBEBEE" },
+        <ListItem
+          sx={{
+            borderRadius: "8px",
+            transition: ".3s",
+            "&:hover": { backgroundColor: "#EBEBEE" },
+          }}
+        >
+          <Link
+            href="/catalog"
+            className="links-styles"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              width: "100%",
             }}
           >
-            <Link
-              href={item.link}
-              className="links-styles"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                width: "100%",
-              }}
-            >
-              {item.icon}
-              <Typography sx={{ fontWeight: "bold" }}>{item.title}</Typography>
-            </Link>
-          </ListItem>
-        ))}
+            <Typography sx={{ fontWeight: "bold" }}>Menú</Typography>
+          </Link>
+        </ListItem>
       </List>
     </Box>
   );
@@ -178,48 +165,76 @@ export function Nav() {
           boxShadow: "none",
           position: "static",
           padding: "16px 0px",
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          alignItems: "center",
         }}
       >
-        <Link
-          href="/"
-          style={{ textDecoration: "none" }}
-          alt="Link to return to the main page with all events"
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Typography color="primary" sx={{ fontWeight: "bold" }}>
-              Panadería Montpellier
-            </Typography>
-          </Box>
-        </Link>
-        <Box
+        <Toolbar
           sx={{
-            display: { xs: "none", sm: "flex" },
+            display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "8px",
           }}
         >
-          {/* <TextField placeholder="Escribe el nombre del pan..." variant="outlined" InputProps={{ endAdornment: <Search /> }} /> */}
-          <IconButton onClick={handleLoginModalToggle}>
-            <Person />
-          </IconButton>
-          <IconButton onClick={handleCartMenuOpen}>
-            <Badge badgeContent={cartItems.length} color="primary">
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
-        </Box>
-        <IconButton
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { sm: "none" } }}
-        >
-          <WidgetsOutlinedIcon />
-        </IconButton>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <Link
+                href="/catalog"
+                style={{ textDecoration: "none", color: "#004d40" }}
+              >
+                <Typography variant="h6">Menú</Typography>
+              </Link>
+            </Box>
+            <Link
+              href="/"
+              style={{
+                textDecoration: "none",
+                color: "#004d40",
+                marginLeft: { xs: 0, sm: "auto" },
+                backgroundColor: "#ffeb3b",
+                padding: "8px 16px",
+                borderRadius: "8px",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  textAlign: { xs: "left", sm: "center" },
+                  fontWeight: "bold",
+                }}
+              >
+                MONTPELLIER
+              </Typography>
+            </Link>
+            <Box sx={{ display: "flex" }}>
+              <Box
+                sx={{
+                  display: { xs: "flex", sm: "none" },
+                  alignItems: "center",
+                }}
+              >
+                <IconButton onClick={handleDrawerToggle}>
+                  <MenuIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <IconButton onClick={handleLoginModalToggle}>
+                  <Person />
+                </IconButton>
+                <IconButton onClick={handleCartMenuOpen}>
+                  <Badge badgeContent={cartItems.length} color="primary">
+                    <ShoppingCart />
+                  </Badge>
+                </IconButton>
+              </Box>
+            </Box>
+          </Box>
+        </Toolbar>
       </AppBar>
       <Box component="nav">
         <Drawer
@@ -268,7 +283,7 @@ export function Nav() {
         ))}
         <Divider />
         <MenuItem>
-          <Button fullWidth onClick={() => router.push("/checkout")}>
+          <Button fullWidth onClick={() => router.push("/payment-process")}>
             Pagar Carrito
           </Button>
         </MenuItem>

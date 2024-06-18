@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Rating, useMediaQuery, useTheme, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Rating,
+  useMediaQuery,
+  useTheme,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { Person } from "@mui/icons-material";
 import { allBreads } from "@/data";
 import { useRouter } from "next/router";
 
 export default function BreadDetails() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
   const { event } = router.query;
   const eventID = parseInt(event);
@@ -16,7 +24,7 @@ export default function BreadDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const session = localStorage.getItem("userSession");
       setIsUserLoggedIn(!!session);
       setLoading(false);
@@ -26,27 +34,43 @@ export default function BreadDetails() {
   if (!eventDetails) {
     if (loading) {
       return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
           <CircularProgress />
         </Box>
       );
     }
-    return <Typography variant="h6" sx={{ textAlign: 'center', marginTop: '20px' }}>Detalles del pan no encontrados.</Typography>;
+    return (
+      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "20px" }}>
+        Detalles del pan no encontrados.
+      </Typography>
+    );
   }
 
-  const scoreSumatory = eventDetails.comments.reduce((acc, comment) => acc + comment.score, 0);
+  const scoreSumatory = eventDetails.comments.reduce(
+    (acc, comment) => acc + comment.score,
+    0
+  );
   const scoreAvg = scoreSumatory / eventDetails.comments.length;
 
   const addToCart = () => {
     if (isUserLoggedIn) {
       const user = JSON.parse(localStorage.getItem("userSession"));
       const users = JSON.parse(localStorage.getItem("users"));
-      const userIndex = users.findIndex(u => u.id === user.id);
+      const userIndex = users.findIndex((u) => u.id === user.id);
       const itemToAdd = { breadId: eventID, quantity: 1 };
 
       if (userIndex >= 0) {
         users[userIndex].cart = users[userIndex].cart || [];
-        const itemIndex = users[userIndex].cart.findIndex(item => item.breadId === eventID);
+        const itemIndex = users[userIndex].cart.findIndex(
+          (item) => item.breadId === eventID
+        );
         if (itemIndex >= 0) {
           users[userIndex].cart[itemIndex].quantity += 1;
         } else {
@@ -108,11 +132,16 @@ export default function BreadDetails() {
             </Typography>
           </Box>
           {isUserLoggedIn && (
-            <Button 
-              color="primary" 
-              variant="contained" 
+            <Button
+              color="primary"
+              variant="contained"
               onClick={addToCart}
-              sx={{ marginTop: "16px" }}
+              sx={{
+                backgroundColor: "#ffeb3b",
+                color: "black",
+                "&:hover": { backgroundColor: "#ffee58" },
+                marginTop: "16px",
+              }}
             >
               Agregar al carrito
             </Button>
@@ -120,11 +149,12 @@ export default function BreadDetails() {
         </Box>
       </Box>
       <Box sx={{ paddingY: "24px" }}>
-        <Typography variant="h5">
-          Descripción
-        </Typography>
+        <Typography variant="h5">Descripción</Typography>
         <Typography variant="body1">{eventDetails.description}</Typography>
-        <Typography variant="h6" sx={{ marginTop: "16px", marginBottom: "8px" }}>
+        <Typography
+          variant="h6"
+          sx={{ marginTop: "16px", marginBottom: "8px" }}
+        >
           Comentarios de usuarios
         </Typography>
         <Box
