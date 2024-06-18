@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, TextField, Typography } from "@mui/material";
-import { allUsers } from "@/data";
 
-const LoginModal = ({ open, onClose }) => {
+const LoginModal = ({ open, onClose, setLoginModalOpen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [creatingAccount, setCreatingAccount] = useState(false);
@@ -10,56 +9,53 @@ const LoginModal = ({ open, onClose }) => {
   const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleCreateAccountClick = () => {
-    setCreatingAccount(true);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
+  const validateInputs = () => {
+    if (creatingAccount) {
+      if (!firstName.trim() || !lastName.trim()) {
+        setErrorMessage("First name and last name are required.");
+        return false;
+      }
+    }
+    if (!email.trim() || !password.trim()) {
+      setErrorMessage("Email and password are required.");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
 
+    if (!validateInputs()) return;
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
     if (creatingAccount) {
-      console.log("Creating Account...");
-      console.log("First Name:", firstName);
-      console.log("Last Name:", lastName);
-      console.log("Email:", email);
-      console.log("Password:", password);
+      const userExists = users.some(user => user.email === email);
+      if (userExists) {
+        setErrorMessage("An account with this email already exists.");
+        return;
+      }
+      const id = users.length + 1;
+      users.push({ id, firstName, lastName, email, password });
+      localStorage.setItem("users", JSON.stringify(users));
+      console.log("Account created successfully!");
+      onClose();
     } else {
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const user = users.find(
-        (user) => user.email === email && user.password === password
-      );
+      const user = users.find(user => user.email === email && user.password === password);
       if (user) {
-        localStorage.setItem(
-          "userSession",
-          JSON.stringify({
-            id: user.id,
-            name: `${user.firstName} ${user.lastName}`,
-          })
-        );
+        localStorage.setItem("userSession", JSON.stringify({ id: user.id, name: `${user.firstName} ${user.lastName}` }));
         console.log("Logged in successfully!");
+        setLoginModalOpen(false);
       } else {
-        console.log("Failed to log in: Incorrect email or password.");
         setErrorMessage("Incorrect email or password.");
       }
     }
-    onClose();
   };
 
   const modalStyle = {
@@ -72,14 +68,6 @@ const LoginModal = ({ open, onClose }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-  };
-
-  const textFieldStyle = {
-    marginBottom: "16px",
-  };
-
-  const buttonStyle = {
-    marginTop: "16px",
   };
 
   return (
@@ -102,18 +90,18 @@ const LoginModal = ({ open, onClose }) => {
                 label="First Name"
                 variant="outlined"
                 fullWidth
-                style={textFieldStyle}
                 value={firstName}
                 onChange={handleFirstNameChange}
+                required
               />
               <TextField
                 id="last-name"
                 label="Last Name"
                 variant="outlined"
                 fullWidth
-                style={textFieldStyle}
                 value={lastName}
                 onChange={handleLastNameChange}
+                required
               />
             </>
           )}
@@ -122,9 +110,9 @@ const LoginModal = ({ open, onClose }) => {
             label="Email"
             variant="outlined"
             fullWidth
-            style={textFieldStyle}
             value={email}
             onChange={handleEmailChange}
+            required
           />
           <TextField
             id="password"
@@ -132,23 +120,21 @@ const LoginModal = ({ open, onClose }) => {
             type="password"
             variant="outlined"
             fullWidth
-            style={textFieldStyle}
             value={password}
             onChange={handlePasswordChange}
+            required
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
-            style={buttonStyle}
+            sx={{ marginTop: 2 }}
           >
             {creatingAccount ? "Create Account" : "Login"}
           </Button>
         </form>
-        <Typography variant="body2">
-          {creatingAccount
-            ? "Already have an account?"
-            : "Don't have an account?"}
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          {creatingAccount ? "Already have an account?" : "Don't have an account?"}
           <Button onClick={() => setCreatingAccount(!creatingAccount)}>
             {creatingAccount ? "Login" : "Create Account"}
           </Button>

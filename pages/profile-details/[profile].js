@@ -1,14 +1,89 @@
-// import React, { useState } from "react";
+// import React, { useState, useEffect } from "react";
 // import { useRouter } from "next/router";
-// import { Typography, Box, Tab, Tabs, Button } from "@mui/material";
-// import { allUsers, allEvents } from "@/data";
+// import {
+//   Typography,
+//   Box,
+//   Tab,
+//   Tabs,
+//   useMediaQuery,
+//   useTheme,
+//   Card,
+//   CardContent,
+//   CardMedia,
+//   IconButton,
+//   Button,
+//   CircularProgress
+// } from "@mui/material";
+// import { allBreads } from "@/data";
+// import DeleteIcon from "@mui/icons-material/Delete";
+
+// const ItemCard = ({ item, isCart, onDelete }) => {
+//   const bread = allBreads.find((bread) => bread.id === item.breadId);
+//   return (
+//     <Card sx={{ display: "flex", my: 2, p: 1, boxShadow: 3 }}>
+//       <CardMedia
+//         component="img"
+//         sx={{ width: 100, height: 100, objectFit: "cover", borderRadius: 1 }}
+//         image={bread.img}
+//         alt={bread.name}
+//       />
+//       <CardContent
+//         sx={{
+//           flexGrow: 1,
+//           display: "flex",
+//           flexDirection: "row",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <Box>
+//           <Typography variant="h6">{bread.name}</Typography>
+//           <Typography variant="body1">
+//             <strong>Cantidad:</strong> {item.quantity}
+//           </Typography>
+//         </Box>
+//         {isCart && (
+//           <IconButton
+//             aria-label="delete"
+//             onClick={() => onDelete(item.breadId)}
+//           >
+//             <DeleteIcon />
+//           </IconButton>
+//         )}
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 // export default function ProfileDetails() {
+//   const theme = useTheme();
+//   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 //   const router = useRouter();
 //   const { profile } = router.query;
-
-//   const user = allUsers.find((user) => user.id === parseInt(profile));
+//   console.log('TCL: ProfileDetails -> profile', router)
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
 //   const [tabValue, setTabValue] = useState(0);
+
+//   useEffect(() => {
+//     if (typeof window !== 'undefined') {
+//       const users = JSON.parse(localStorage.getItem("users"));
+// 			console.log("TCL: ProfileDetails -> users", users)
+//       console.log("TCL: ProfileDetails -> profile", profile)
+//       const userFound = users.find(
+//         (user) => user.id === parseInt(profile)
+//       );
+//       setUser(userFound);
+//       setLoading(false);
+//     }
+//   }, [profile]);
+
+//   if (loading) {
+//     return (
+//       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+//         <CircularProgress />
+//       </Box>
+//     );
+//   }
 
 //   if (!user) {
 //     return <Typography>User not found.</Typography>;
@@ -18,15 +93,26 @@
 //     setTabValue(newValue);
 //   };
 
-//   const myEvents = allEvents.filter(
-//     (event) => event.creator && event.creator.id_user === user.id
-//   );
+//   const handleDeleteItem = (itemId) => {
+//     const updatedCart = user.cart.filter((item) => item.breadId !== itemId);
+//     user.cart = updatedCart;
+//     const updatedUsers = JSON.parse(localStorage.getItem("users")).filter(
+//       (u) => u.id !== user.id
+//     );
+//     updatedUsers.push(user);
+//     localStorage.setItem("users", JSON.stringify(updatedUsers));
+//   };
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("userSession");
+//     router.push('/');
+//   };
 
 //   return (
 //     <>
-//       <Box sx={{ my: 4 }}>
+//       <Box sx={{ my: 4, p: isMobile ? 1 : 4 }}>
 //         <Typography variant="h4" component="h1" gutterBottom>
-//           User Profile Details
+//           Detalles de cuenta
 //         </Typography>
 //         <Typography variant="body1">
 //           <strong>First Name:</strong> {user.firstName}
@@ -37,74 +123,140 @@
 //         <Typography variant="body1">
 //           <strong>Email:</strong> {user.email}
 //         </Typography>
+//         <Button color="secondary" variant="contained" onClick={handleLogout} sx={{ my: 2 }}>
+//           Cerrar Sesión
+//         </Button>
 //       </Box>
-//       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-//         <Tabs
-//           value={tabValue}
-//           onChange={handleChange}
-//           aria-label="profile tabs"
-//         >
-//           <Tab label="My Tickets" />
-//           <Tab label="My Events" />
-//         </Tabs>
-//       </Box>
-//       <Box>
-//         {tabValue === 0 && <Typography sx={{ p: 3 }}>Coming soon</Typography>}
-//         {tabValue === 1 && (
-//           <Box sx={{ p: 3 }}>
-//             <Button variant="contained" color="primary" sx={{ mb: 2 }}>
-//               Create Event
-//             </Button>
-//             {myEvents.length > 0 ? (
-//               myEvents.map((event) => (
-//                 <Box
-//                   key={event.id}
-//                   sx={{ my: 2, display: "flex", gap: "12px" }}
-//                 >
-//                   <Box
-//                     component="img"
-//                     height="200"
-//                     src={event.img}
-//                     alt={`Image ${event.name}`}
-//                     sx={{
-//                       width: "70px",
-//                       height: "70px",
-//                       objectFit: "cover",
-//                       borderRadius: "12px",
-//                     }}
-//                   />
-//                   <Box>
-//                     <Typography variant="h6">{event.name}</Typography>
-//                     <Typography>{event.description}</Typography>
-//                     <Typography variant="body2" color="text.secondary">
-//                       {event.dates}
-//                     </Typography>
-//                   </Box>
-//                 </Box>
-//               ))
-//             ) : (
-//               <Typography>No events created yet.</Typography>
-//             )}
-//           </Box>
-//         )}
+//       <Tabs
+//         value={tabValue}
+//         onChange={handleChange}
+//         aria-label="profile tabs"
+//         variant="fullWidth"
+//         centered
+//         sx={{ borderBottom: 1, borderColor: "divider" }}
+//       >
+//         <Tab label="Compras" />
+//         <Tab label="Carrito" />
+//       </Tabs>
+//       <Box sx={{ p: 2 }}>
+//         {tabValue === 0 &&
+//           user.purchases.map((purchase, index) => (
+//             <Box key={index} sx={{ my: 2 }}>
+//               <Typography variant="h6" component="h2">
+//                 Compra {index + 1}
+//               </Typography>
+//               {purchase.map((item) => (
+//                 <ItemCard key={item.id} item={item} isCart={false} />
+//               ))}
+//             </Box>
+//           ))}
+//         {tabValue === 1 &&
+//           user.cart.map((item) => (
+//             <ItemCard
+//               key={item.id}
+//               item={item}
+//               isCart={true}
+//               onDelete={handleDeleteItem}
+//             />
+//           ))}
 //       </Box>
 //     </>
 //   );
 // }
 
-import React, { useState } from "react";
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Typography, Box, Tab, Tabs, Button } from "@mui/material";
-import NewEventForm from "@/components/Forms/NewEventForm";
-import { allUsers, allEvents } from "@/data";
+import {
+  Typography,
+  Box,
+  Tab,
+  Tabs,
+  useMediaQuery,
+  useTheme,
+  Card,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Button,
+  CircularProgress
+} from "@mui/material";
+import { allBreads } from "@/data";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+const ItemCard = ({ item, isCart, onDelete }) => {
+  const bread = allBreads.find((bread) => bread.id === item.breadId);
+  return (
+    <Card sx={{ display: "flex", my: 2, p: 1, boxShadow: 3 }}>
+      <CardMedia
+        component="img"
+        sx={{ width: 100, height: 100, objectFit: "cover", borderRadius: 1 }}
+        image={bread.img}
+        alt={bread.name}
+      />
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box>
+          <Typography variant="h6">{bread.name}</Typography>
+          <Typography variant="body1">
+            <strong>Cantidad:</strong> {item.quantity}
+          </Typography>
+        </Box>
+        {isCart && (
+          <IconButton
+            aria-label="delete"
+            onClick={() => onDelete(item.breadId)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function ProfileDetails() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
-  const { profile } = router.query;
-
-  const user = allUsers.find((user) => user.id === parseInt(profile));
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [tabValue, setTabValue] = useState(0);
-  const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { profile } = router.query;
+      const users = JSON.parse(localStorage.getItem("users"));
+      const userFound = users.find(
+        (user) => user.id === parseInt(profile)
+      );
+      setUser(userFound);
+      setLoading(false);
+    }
+  }, [router.isReady, router.query]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (!user) {
     return <Typography>User not found.</Typography>;
@@ -114,23 +266,26 @@ export default function ProfileDetails() {
     setTabValue(newValue);
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleDeleteItem = (itemId) => {
+    const updatedCart = user.cart.filter((item) => item.breadId !== itemId);
+    user.cart = updatedCart;
+    const updatedUsers = JSON.parse(localStorage.getItem("users")).filter(
+      (u) => u.id !== user.id
+    );
+    updatedUsers.push(user);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleLogout = () => {
+    localStorage.removeItem("userSession");
+    router.push('/');
   };
-
-  const myEvents = allEvents.filter(
-    (event) => event.creator && event.creator.id_user === user.id
-  );
 
   return (
     <>
-      <Box sx={{ my: 4 }}>
+      <Box sx={{ my: 4, p: isMobile ? 1 : 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          User Profile Details
+          Detalles de cuenta
         </Typography>
         <Typography variant="body1">
           <strong>First Name:</strong> {user.firstName}
@@ -141,63 +296,45 @@ export default function ProfileDetails() {
         <Typography variant="body1">
           <strong>Email:</strong> {user.email}
         </Typography>
+        <Button color="secondary" variant="contained" onClick={handleLogout} sx={{ my: 2 }}>
+          Cerrar Sesión
+        </Button>
       </Box>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={tabValue}
-          onChange={handleChange}
-          aria-label="profile tabs"
-        >
-          <Tab label="My Tickets" />
-          <Tab label="My Events" />
-        </Tabs>
-      </Box>
-      <Box>
-        {tabValue === 0 && <Typography sx={{ p: 3 }}>Coming soon</Typography>}
-        {tabValue === 1 && (
-          <Box sx={{ p: 3 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpenModal}
-              sx={{ mb: 2 }}
-            >
-              Create Event
-            </Button>
-            {myEvents.length > 0 ? (
-              myEvents.map((event) => (
-                <Box
-                  key={event.id}
-                  sx={{ my: 2, display: "flex", gap: "12px" }}
-                >
-                  <Box
-                    component="img"
-                    height="200"
-                    src={event.img}
-                    alt={`Image ${event.name}`}
-                    sx={{
-                      width: "70px",
-                      height: "70px",
-                      objectFit: "cover",
-                      borderRadius: "12px",
-                    }}
-                  />
-                  <Box>
-                    <Typography variant="h6">{event.name}</Typography>
-                    <Typography>{event.description}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {event.dates}
-                    </Typography>
-                  </Box>
-                </Box>
-              ))
-            ) : (
-              <Typography>No events created yet.</Typography>
-            )}
-            <NewEventForm open={openModal} handleClose={handleCloseModal} />
-          </Box>
-        )}
+      <Tabs
+        value={tabValue}
+        onChange={handleChange}
+        aria-label="profile tabs"
+        variant="fullWidth"
+        centered
+        sx={{ borderBottom: 1, borderColor: "divider" }}
+      >
+        <Tab label="Compras" />
+        <Tab label="Carrito" />
+      </Tabs>
+      <Box sx={{ p: 2 }}>
+        {tabValue === 0 &&
+          user.purchases.map((purchase, index) => (
+            <Box key={index} sx={{ my: 2 }}>
+              <Typography variant="h6" component="h2">
+                Compra {index + 1}
+              </Typography>
+              {purchase.map((item) => (
+                <ItemCard key={item.id} item={item} isCart={false} />
+              ))}
+            </Box>
+          ))}
+        {tabValue === 1 &&
+          user.cart.map((item) => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              isCart={true}
+              onDelete={handleDeleteItem}
+            />
+          ))}
       </Box>
     </>
   );
 }
+
+

@@ -1,8 +1,4 @@
-//TODO: create components for Head and Nav
-
 import { Nav } from "@/components/common/Nav";
-// import { Footer } from "../components/common/Footer";
-// import { ScrollToTopBtn } from "../components/Buttons/ScrollToTopBtn";
 import { Box, Container } from "@mui/material";
 
 export default function MainLayout(props) {
@@ -13,8 +9,6 @@ export default function MainLayout(props) {
         <Nav />
       </Box>
       <Box sx={{ marginTop: "32px" }}>{children}</Box>
-      {/* <ScrollToTopBtn />
-      <Footer /> */}
     </Container>
   );
 }
